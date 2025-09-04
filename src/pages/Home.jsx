@@ -1,10 +1,13 @@
-function Register(){
+import Profile from "./Profile";
+import Sidebar from "../component/Slider";
 
-
-    return(
-        <div>
-            <h1>Home page</h1>
-        </div>
-    )
+function Home() {
+  return (
+    <div className="flex">
+      <Sidebar />
+      <Profile />
+    </div>
+  );
 }
-export default Register;
+
+export default Home;

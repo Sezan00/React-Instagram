@@ -1,4 +1,5 @@
 import Footer from "../component/Footer";
+import { Link } from "react-router-dom";
 
 function Login() {
     return (
@@ -10,7 +11,7 @@ function Login() {
 
                 {/* //login section  */}
                 <div className="flex justify-center">
-                    <div className=" border border-gray-400 mt-8 w-100 max-w-[350px] justify-center p-5 rounded shadow">
+                    <div className="mt-8 w-100 max-w-[350px] justify-center p-5">
                         <div>
                             <h2 className="font-dancing-script text-center text-5xl mb-3">Instagram</h2>
                         </div>
@@ -48,9 +49,9 @@ function Login() {
                     </div>
                     <div className="flex justify-center mt-10 text-sm">
                     <span className="text-gray-600">Don't have an account?</span>
-                    <a href="#" className="ml-1 font-medium text-blue-600 hover:underline">
+                    <Link to="/register" className="ml-1 font-medium text-blue-600 hover:underline">
                         Sign up
-                    </a>
+                    </Link>
                     </div>
                     </div>
                 </div>

@@ -1,11 +1,27 @@
+import { useNavigate } from "react-router-dom";
+import { signup } from "../features/auth/authSlice";
 import Footer from "../component/Footer";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function Register(){
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const [form, setForm] = useState({full_name: "", username: "", email: "", password: ""});
+    const {user, status, error } = useSelector((state)=>state.auth);
 
 
+    const handleChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(signup(form));
+    };
     return(
-            <> 
-         
+      <> 
+          <form onSubmit={handleSubmit}> 
         <div className="flex justify-center">
             <div className=" border border-gray-400 mt-12 w-100 max-w-[350px] justify-center p-10 rounded shadow">
                 <h2 className="text-4xl text-center font-dancing-script font-bold">Instagram</h2>
@@ -24,14 +40,14 @@ function Register(){
 
                 <div>
                     <div className="relative">
-                        <input className="peer w-full border border-gray-300 rounded px-2 pt-5 pb-1 text-xs" type="text" id="email" placeholder=" "/>
+                        <input name="email" className="peer w-full border border-gray-300 rounded px-2 pt-5 pb-1 text-xs" type="text" onChange={handleChange } id="email" placeholder=" "/>
                         <label htmlFor="email" 
                         className="absolute text-sm left-2 top-1.5 transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-xs peer-focus:top-1.5 peer-focus:text-sm">
                             Mobile Number or Email
                         </label>
                     </div>
                     <div className="relative">
-                        <input className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" id="password" type="text" placeholder=" " />
+                        <input name="password" className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" onChange={handleChange } id="password" type="text" placeholder=" " />
                         <label htmlFor="password"
                         className="absolute text-sm left-2 top-1.5 transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-xs peer-focus:top-1.5 peer-focus:text-sm">
                             password
@@ -40,7 +56,7 @@ function Register(){
                     
                     
                     <div className="relative">
-                        <input className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" id="full_name" type="text" placeholder=" "/>
+                        <input name="full_name" className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" onChange={handleChange } id="full_name" type="text" placeholder=" "/>
                         <label htmlFor="full_name"
                         className="absolute text-sm left-2 top-1.5 transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-xs peer-focus:top-1.5 peer-focus:text-sm">
                             Full name
@@ -49,7 +65,7 @@ function Register(){
 
 
                     <div className="relative">
-                        <input className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" id="username" type="text" placeholder=" "/>
+                        <input name="username" className="peer mt-2 w-full border border-gray-300 rounded px-2 py-1" onChange={handleChange } id="username" type="text" placeholder=" "/>
                         <label htmlFor="username"
                         className="absolute text-sm left-2 top-1.5 transition-all peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-xs peer-focus:top-1.5 peer-focus:text-sm">
                             username
@@ -75,19 +91,26 @@ function Register(){
              <div className="flex justify-center mt-2">
                 <button className="border px-20 py-1 bg-[#1877F2] text-white font-semibold rounded-sm">Sign up</button>
              </div>
-            
+                {error && (
+    <div className="text-red-500 text-sm text-center mt-2">
+        {typeof error === "object"
+            ? Object.values(error).map((err, i) => <p key={i}>{err}</p>)
+            : error}
+    </div>
+)}
             </div>
+                    
         </div>
-
+        
         <div className="flex justify-center">
             <div className=" border border-gray-400 mt-8 w-100 max-w-[350px] justify-center p-5 rounded shadow">
                 <div className="flex flex-col items-center gap-2">
                     <span>Have an account?</span>
-                    <button className="text-blue-500 font-semibold">Log in</button>
+                    <button   onClick={()=> navigate("/login")} className="text-blue-500 font-semibold">Log in</button>
                 </div>
             </div>
         </div>
-
+        </form>
         <Footer/>
            </>
     )
