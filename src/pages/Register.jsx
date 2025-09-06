@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { signup } from "../features/auth/authSlice";
 import Footer from "../component/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 function Register(){
@@ -19,6 +19,13 @@ function Register(){
         e.preventDefault();
         dispatch(signup(form));
     };
+
+    useEffect(()=>{
+        if(status === "success"){
+            navigate('/login')
+        }
+    },[status, navigate]);
+
     return(
       <> 
           <form onSubmit={handleSubmit}> 
@@ -92,11 +99,11 @@ function Register(){
                 <button className="border px-20 py-1 bg-[#1877F2] text-white font-semibold rounded-sm">Sign up</button>
              </div>
                 {error && (
-    <div className="text-red-500 text-sm text-center mt-2">
-        {typeof error === "object"
-            ? Object.values(error).map((err, i) => <p key={i}>{err}</p>)
-            : error}
-    </div>
+            <div className="text-red-500 text-sm text-center mt-2">
+                {typeof error === "object"
+                    ? Object.values(error).map((err, i) => <p key={i}>{err}</p>)
+                    : error}
+            </div>
 )}
             </div>
                     
