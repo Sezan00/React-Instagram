@@ -1,8 +1,24 @@
-// components/Profile.jsx
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Boxes, Bookmark, Contact  } from "lucide-react";
+import UploadProfile from '../component/UploadProfile';
+import { fetchUser } from '../api/user';
 
 export default function Profile() {
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(()=> {
+    const loadUser = async () => {
+      try{
+        const data = await fetchUser();
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadUser();
+  }, [])
+
   return (
       <>
             <div className="ml-120 mt-14 flex-col justify-center">
@@ -10,14 +26,17 @@ export default function Profile() {
 
              
               <div className="flex"> 
-                  <img src="/images/profile photo.jpg" className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow" alt="" />
+                  <img src={user?.profile_image ||  "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" } className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow" alt=""
+                   onClick={()=> setOpen(true)}
+                  />
+                  <UploadProfile open={open} onClose={()=>setOpen(false)} />
               </div>
                 
 
               <div className="ml-24 mt-4">
 
                 <div className="flex items-center gap-5">
-                  <p className="font-semibold text-lg">Sezan.__</p>
+                  <p className="font-semibold text-lg">{user ? (user.username): <span className='inline-block h-5 w-32 bg-gray-300 rounded animate-pulse'></span> }</p>
                   <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                     Edit profile
                   </button>
@@ -33,10 +52,10 @@ export default function Profile() {
                 </div>
 
                 <div className="flex items-center gap-5 mt-5">
-                  <p className="font-semibold">Al Sharia Sezan</p>
+                  <p className="font-semibold">{user ? (user.full_name): <span className='inline-block h-5 w-32 bg-gray-300 rounded animate-pulse'></span>}</p>
                   </div>
                   <div className="flex">
-                    <button className="bg-gray-200 px-1 py-1 text-sm rounded-2xl">Sezan.__</button>
+                    <button className="bg-gray-200 px-1 py-1 text-sm rounded-2xl">@Thered</button>
                   </div>
               </div>
                </div>
@@ -96,8 +115,6 @@ export default function Profile() {
 
             </div>
 
-            
-              
            
         </>
   );
