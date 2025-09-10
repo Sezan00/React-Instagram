@@ -53,5 +53,20 @@ class ProfileImageController extends Controller
     ], 201);
 }
 
+    public function destroy(){
+        $user = Auth::user();
+
+        if($user->profileImage){
+            Storage::disk('public')->delete($user->profileImage->image_path);
+
+            $user->profileImage->delete();
+        }
+
+        return response()->json([
+            'message' => 'Profile image removed successfully'
+        ]);
+
+    }
+
     
 }

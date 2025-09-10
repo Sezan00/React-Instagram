@@ -12,6 +12,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile-image', [ProfileImageController::class, 'index']);
     Route::post('/profile-image', [ProfileImageController::class, 'store']); 
+    Route::delete('/profile-image', [ProfileImageController::class, 'destroy']);
 
     Route::get('/user', [UserController::class, 'me']);
 });
