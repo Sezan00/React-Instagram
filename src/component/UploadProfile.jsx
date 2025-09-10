@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { uploadProfileImage } from "../api/profile";
+import { profileIageDelete } from "../api/profileImagedelete";
 
 
 export default function  UploadProfile({open, onClose}){
      const [file, setFile] = useState(null); 
+     const [profileImage, setProfileImage] = useState(null);
+
      if(!open) return null;
 
      function handleFile(selected){
@@ -22,6 +25,20 @@ export default function  UploadProfile({open, onClose}){
         setFile(null);
      }
 
+     async function handleRemoveProfile() {
+        if (!confirm("Are you sure you want to remove your profile image?")) return;
+
+        try {
+            await profileIageDelete();
+            alert("Profile Image deleted");
+            setProfileImage(null); 
+            setFile(null);         
+        } catch (err) {
+            console.error(err);
+            alert("Failed to remove profile image");
+        }
+        }
+
     async function handleSave() {
         if(!file) return;
 
@@ -29,11 +46,11 @@ export default function  UploadProfile({open, onClose}){
             const res = await uploadProfileImage(file.file);
             console.log("Update", res.data);
             
-            alert("Profile picture updated");
+         
             onClose();
         } catch (err) {
             console.error("Updloaad Failed", err);
-            alert("upload failed");
+        
         }
      }
 
@@ -67,7 +84,7 @@ export default function  UploadProfile({open, onClose}){
                             </label>
 
                             {/* delete button  */}
-                            {file &&(
+                            {file  &&(
                                 <button onClick={handleDelete} className="w-full py-2 mb-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
                                    Delete photo     
                                 </button>
@@ -76,6 +93,9 @@ export default function  UploadProfile({open, onClose}){
                         <div className="flex gap-3 w-full mt-4">
                             <button onClick={onClose} className="flex-1 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
                                 Cancle
+                            </button>
+                            <button onClick={handleRemoveProfile} className="flex-1 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-red-300">
+                                Remove profile
                             </button>
 
                             <button  onClick={handleSave} disabled={!file} className={`flex-1 py-2 rounded ${
