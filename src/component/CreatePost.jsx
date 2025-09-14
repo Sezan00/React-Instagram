@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { uploadPhotos } from "../api/photos";
 
 
 
@@ -16,12 +17,27 @@ export default function CreatePost({ onClose }) {
     setFiles(arr);
   }
 
-  function sharePost() {
-      console.log("Files:", files);
-      console.log("caption:", caption)
-      alert("Post created (demo only)!");
+async function sharePost() {
+  try {
+    const formData = new FormData(); 
+
+    // Add selected files
+    files.forEach((f) => formData.append("images[]", f.file));
+
+    // Add caption
+    formData.append("caption", caption); 
+
+    // Call API
+    const uploaded = await uploadPhotos(formData);
+    console.log("Uploaded:", uploaded);
+    alert("Post create successfully");
     onClose();
+  } catch (err) {
+    console.error("Upload failed:", err);
+    alert("Upload failed");
   }
+}
+
 
   return(
    <>
@@ -69,6 +85,8 @@ export default function CreatePost({ onClose }) {
         </label>
         <input
           type="text"
+          value={caption}
+          onChange={(e)=>setCaption(e.target.value)}
           placeholder="Write a caption..."
           className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
         />

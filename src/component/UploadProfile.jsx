@@ -3,9 +3,10 @@ import { uploadProfileImage } from "../api/profile";
 import { profileIageDelete } from "../api/profileImagedelete";
 
 
-export default function  UploadProfile({open, onClose}){
+export default function  UploadProfile({updateProfile, user, open, onClose}){
      const [file, setFile] = useState(null); 
      const [profileImage, setProfileImage] = useState(null);
+     
 
      if(!open) return null;
 
@@ -44,9 +45,10 @@ export default function  UploadProfile({open, onClose}){
 
         try{
             const res = await uploadProfileImage(file.file);
-            console.log("Update", res.data);
-            
-         
+            // console.log("Update", user.user.profile_image);
+            const makeUser = {...user};
+            makeUser.profile_image = res.image_url
+            updateProfile(makeUser)
             onClose();
         } catch (err) {
             console.error("Updloaad Failed", err);

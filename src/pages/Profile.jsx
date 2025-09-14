@@ -2,10 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { Boxes, Bookmark, Contact  } from "lucide-react";
 import UploadProfile from '../component/UploadProfile';
 import { fetchUser } from '../api/user';
+import { fetchPost } from '../api/photos';
+import ModalCarousel from '../component/ModalCarousel';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  useEffect(()=>{
+    fetchPost().then((data)=>{
+      console.log("Post from API:", data)
+      setPosts(data);
+    })
+  },[]);
 
   useEffect(()=> {
     const loadUser = async () => {
@@ -19,6 +30,18 @@ export default function Profile() {
     loadUser();
   }, [])
 
+
+  useEffect(() => {
+    console.log("CALLING USE EFFECT FOR USER");
+    
+  }, [user])
+
+  const updateProfile = (makeUser) => {
+    console.log("==> ", makeUser.user.profile_image);
+    
+    setUser(makeUser);
+  }
+
   return (
       <>
             <div className="ml-120 mt-14 flex-col justify-center">
@@ -26,10 +49,10 @@ export default function Profile() {
 
              
               <div className="flex"> 
-                  <img src={user?.profile_image ||  "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" } className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow" alt=""
+                  {user && <img src={user?.profile_image ||  "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png" } className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow" alt=""
                    onClick={()=> setOpen(true)}
-                  />
-                  <UploadProfile open={open} onClose={()=>setOpen(false)} />
+                  />}
+                  <UploadProfile open={open} updateProfile={updateProfile} user={{user}} onClose={()=>setOpen(false)} />
               </div>
                 
 
@@ -88,32 +111,37 @@ export default function Profile() {
             
             </div>
               {/* image card  */}
-            <div className="grid grid-cols-3 ">
-                <div className="w-40 h-40 border border-gray-300">
-                  <img
-                    src="https://via.placeholder.com/300"
-                    alt="img1"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="w-40 h-40 border border-gray-300">
-                  <img
-                    src="https://via.placeholder.com/301"
-                    alt="img2"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="w-40 h-40 border border-gray-300">
-                  <img
-                    src="https://via.placeholder.com/302"
-                    alt="img3"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+         
+      <div className="grid grid-cols-3 gap-4 justify-items-center mt-5">
+  {posts.map((post) => (
+    <div 
+      key={post.id} 
+      className="w-48 h-48 border border-gray-300 cursor-pointer"
+      onClick={() => setSelectedPost(post)}
+    >
+      {post.photos.length > 0 ? (
+        <img
+          src={`data:image/jpeg;base64,${post.photos[0].image}`}
+          alt={`post-${post.id}`}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-gray-500">
+          No image
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+  {selectedPost && (
+    <ModalCarousel 
+      post={selectedPost} 
+      onClose={() => setSelectedPost(null)} 
+    />
+  )}
+
           </div>
             
-
-            </div>
 
            
         </>
