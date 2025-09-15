@@ -4,17 +4,21 @@ import UploadProfile from '../component/UploadProfile';
 import { fetchUser } from '../api/user';
 import { fetchPost } from '../api/photos';
 import ModalCarousel from '../component/ModalCarousel';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPosts } from '../features/postSlice';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
+  const posts = useSelector((state) => state.posts.posts)
   const [selectedPost, setSelectedPost] = useState(null);
+
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     fetchPost().then((data)=>{
-      console.log("Post from API:", data)
-      setPosts(data);
+      dispatch(setPosts(data));
     })
   },[]);
 

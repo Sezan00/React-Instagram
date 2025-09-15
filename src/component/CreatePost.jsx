@@ -1,11 +1,15 @@
 import { useState } from "react";
-import { uploadPhotos } from "../api/photos";
+import { fetchPost, uploadPhotos } from "../api/photos";
+import { useDispatch } from "react-redux";
+import { setPosts } from "../features/postSlice";
 
 
 
 export default function CreatePost({ onClose }) { 
   const [files, setFiles] = useState([]);
   const [caption, setCaption] = useState("");
+
+  const dispatch = useDispatch();
 
 
    function handleFiles(selected) {
@@ -31,6 +35,9 @@ async function sharePost() {
     const uploaded = await uploadPhotos(formData);
     console.log("Uploaded:", uploaded);
     alert("Post create successfully");
+    fetchPost().then((data)=>{
+          dispatch(setPosts(data));
+        })
     onClose();
   } catch (err) {
     console.error("Upload failed:", err);
