@@ -41,7 +41,8 @@ const loginSlice = createSlice({
         state.status = "success";
         state.user = action.payload.user;
         state.token = action.payload.token;
-
+        console.log(action.payload.user);
+        
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("token", action.payload.token);
       })

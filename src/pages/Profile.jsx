@@ -6,6 +6,7 @@ import { fetchPost } from '../api/photos';
 import ModalCarousel from '../component/ModalCarousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from '../features/postSlice';
+import { useParams } from 'react-router-dom';
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
@@ -13,6 +14,10 @@ export default function Profile() {
   // const [posts, setPosts] = useState([]);
   const posts = useSelector((state) => state.posts.posts)
   const [selectedPost, setSelectedPost] = useState(null);
+  const {username} = useParams();
+
+  console.log(username);
+  
 
   const dispatch = useDispatch();
 
