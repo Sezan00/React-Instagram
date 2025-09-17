@@ -9,6 +9,7 @@ import { fetchPost } from '../api/photos';
 import { fetchUser } from '../api/user';
 import { setPosts } from '../features/postSlice';
 import { fetchUserByUsername } from '../api/usernameApi/userAPi';
+import ModalCarousel from '../component/ModalCarousel';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
@@ -62,16 +63,33 @@ export default function UserProfile() {
 
                     <div className="ml-24 mt-4">
 
-                        {currentUserEmail == user?.email && <div className="flex items-center gap-5">
-                            <p className="font-semibold text-lg">{user ? (user.username) : <span className='inline-block h-5 w-32 bg-gray-300 rounded animate-pulse'></span>}</p>
-                            <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
-                                Edit profile
-                            </button>
-                            <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
-                                View archive
-                            </button>
-                        </div>}
+               {user && (
+                    <div className="flex items-center gap-5">
+                    <p className="font-semibold text-lg">
+                        {user.username}
+                    </p>
 
+                    {currentUserEmail === user.email ? (
+                        <>
+                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                            Edit profile
+                        </button>
+                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                            View archive
+                        </button>
+                        </>
+                    ) : (
+                        <>
+                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                            Message
+                        </button>
+                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                            Following
+                        </button>
+                        </>
+                    )}
+                    </div>
+                )}
                         <div className="flex items-center gap-5 mt-4">
                             <p>6 posts</p>
                             <p>40 followers</p>
@@ -85,6 +103,7 @@ export default function UserProfile() {
                             <button className="bg-gray-200 px-1 py-1 text-sm rounded-2xl">@Thered</button>
                         </div>
                     </div>
+                    
                 </div>
                 {/* story highlight section  */}
                 <div className="flex gap-15 mt-10">
