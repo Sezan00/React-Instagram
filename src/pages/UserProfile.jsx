@@ -10,10 +10,12 @@ import { fetchUser } from '../api/user';
 import { setPosts } from '../features/postSlice';
 import { fetchUserByUsername } from '../api/usernameApi/userAPi';
 import ModalCarousel from '../component/ModalCarousel';
+import { followToggle, fetchUserProfile } from '../features/follow/followSlice';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState(null);
+
     // const [posts, setPosts] = useState([]);
     const posts = useSelector((state) => state.posts.posts)
     const [selectedPost, setSelectedPost] = useState(null);
@@ -32,7 +34,7 @@ export default function UserProfile() {
         })
         const currentUser = localStorage.getItem("user") ?? false;
         setCurrentUserEmail(JSON.parse(currentUser)?.email ?? false)
-    },[]);
+    },[username, dispatch]);
 
 
     useEffect(() => {
@@ -45,6 +47,23 @@ export default function UserProfile() {
         
         setUser(makeUser);
     }
+
+
+    const { followersCount, followingsCount, isFollowing, loading } = useSelector(
+        (state) => state.follow
+    );
+
+    useEffect(()=>{
+        if(user){
+            dispatch(fetchUserProfile(user.id));
+        }
+    }, [user, dispatch]);
+
+    const handleFollow = () => {
+        if (user) {
+        dispatch(followToggle(user.id));
+  }
+    }
     return (
         <div className="flex">
             <Sidebar />
@@ -53,11 +72,27 @@ export default function UserProfile() {
 
 
                     <div className="flex">
-                        {user && <img src={user?.profile_image || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"} className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow" alt=""
-                            onClick={() => setOpen(true)}
-                        />}
+                       {user && (
+                            <img
+                                src={
+                                user?.profile_image ||
+                                "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                                }
+                                className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow"
+                                alt=""
+                                onClick={() => {
+                                if (currentUserEmail === user.email) {
+                                    setOpen(true);
+                                }
+                                }}
+                            />
+                            )}
+
                         {/* <p>{user?.profile_image ?? 'NO PROFILE IMAGE'}</p> */}
-                        <UploadProfile open={open} updateProfile={updateProfile} user={{ user }} onClose={() => setOpen(false)} />
+                        { currentUserEmail === user?.email && (
+                            <UploadProfile open={open} updateProfile={updateProfile} user={{ user }} onClose={() => setOpen(false)} />
+                        )}
+                        
                     </div>
 
 
@@ -80,20 +115,20 @@ export default function UserProfile() {
                         </>
                     ) : (
                         <>
-                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
-                            Message
+                        <button onClick={handleFollow} disabled={loading} className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                            {isFollowing ? "Unfollow" : "Follow"}
                         </button>
                         <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
-                            Following
+                            Message
                         </button>
                         </>
                     )}
                     </div>
                 )}
                         <div className="flex items-center gap-5 mt-4">
-                            <p>6 posts</p>
-                            <p>40 followers</p>
-                            <p>0 following</p>
+                            <p>{posts.length} posts</p>
+                            <p>{followersCount} followers</p>
+                            <p>{followingsCount} following</p>
                         </div>
 
                         <div className="flex items-center gap-5 mt-5">

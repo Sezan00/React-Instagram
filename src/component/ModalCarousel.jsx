@@ -36,12 +36,15 @@ export default function ModalCarousel({ post, onClose }) {
         {/* Image Carousel */}
         <div className="flex items-center justify-center">
           {/* Left button */}
-          <button
+         {post.photos.length > 1 && (
+            <button
             onClick={handlePrev}
             className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full"
           >
             ◀
           </button>
+         )}
+        
           <div className="relative flex items-center justify-center">
 
           </div>
@@ -53,13 +56,16 @@ export default function ModalCarousel({ post, onClose }) {
           />
 
           {/* Right button */}
-          <button
+          {post.photos.length > 1 &&(
+            <button
             onClick={handleNext}
             className="absolute right-4 top-1/2 -translate-y-1/2 
                      bg-black/50 text-white px-3 py-2 rounded-full" 
           >
             ▶
           </button>
+          )}
+          
         </div>
 
         {/* Caption */}

@@ -9,7 +9,7 @@ function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.login);
-  const naviagate = useNavigate();
+  const navigate = useNavigate();
 
   
   const handleChange = (e) =>
@@ -20,11 +20,11 @@ function Login() {
     dispatch(login(form));
   };
 
-  useEffect(()=>{
-    if(user) {
-        naviagate("/profile");
+   useEffect(() => {
+    if (user) {
+      navigate(`/profile/${user.username}`); 
     }
-  })
+  }, [user, navigate]);
 
   return (
     <form onSubmit={handleSubmit}>

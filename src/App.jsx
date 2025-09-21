@@ -8,7 +8,7 @@ import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <Routes>
-      <Route path="/profile" element={<ProtectedRoute> <Home /> </ProtectedRoute> } />   
+     
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login/>}/>
       <Route path="/profile/:username" element={<UserProfile />}/>

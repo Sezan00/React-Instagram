@@ -8,6 +8,7 @@ export async function fetchUserByUsername(username) {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.data;
+  
 }
 
 export async function fetchCurrentUser() {
