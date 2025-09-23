@@ -12,5 +12,5 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
-export const getUserProfile = (userId) => API.get(`/user/${userId}`);
+// export const getUserProfile = (userId) => API.get(`/user/${userId}`)
 export const toggleFollow = (userId) => API.post(`/user/${userId}/follow`);

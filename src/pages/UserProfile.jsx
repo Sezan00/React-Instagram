@@ -10,7 +10,7 @@ import { fetchUser } from '../api/user';
 import { setPosts } from '../features/postSlice';
 import { fetchUserByUsername } from '../api/usernameApi/userAPi';
 import ModalCarousel from '../component/ModalCarousel';
-import { followToggle, fetchUserProfile } from '../features/follow/followSlice';
+import { toggleFollow } from '../api/userFollowApi/userFollow';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
@@ -21,8 +21,17 @@ export default function UserProfile() {
     const [selectedPost, setSelectedPost] = useState(null);
     const {username} = useParams();
     const [currentUserEmail, setCurrentUserEmail] = useState(false);
-
-    console.log(username);
+    const saveduser = localStorage.getItem("user") ?? false;
+    const currentUser = saveduser ? JSON.parse(saveduser) : null;
+    const [followers, setFollowers] = useState([]);
+    const [following, setFollowing] = useState([]);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [loading, setLoadig] = useState(false)
+    
+    
+    //  const { followersCount, followingsCount, isFollowing, loading } = useSelector(
+    //     (state) => state.follow
+    // );
     
 
     const dispatch = useDispatch();
@@ -31,38 +40,48 @@ export default function UserProfile() {
         fetchUserByUsername(username).then((data) => {
             setUser(data.user);
             dispatch(setPosts(data.posts));
+            setFollowers(data.followers)
+            setFollowing(data.following)
         })
-        const currentUser = localStorage.getItem("user") ?? false;
-        setCurrentUserEmail(JSON.parse(currentUser)?.email ?? false)
+        
     },[username, dispatch]);
 
 
     useEffect(() => {
-        console.log("CALLING USE EFFECT FOR USER");
+        setIsFollowing(followers.find(item => item.follower_id == currentUser.id) ?? false)
         
     }, [user])
 
     const updateProfile = (makeUser) => {
-        console.log("==> ", makeUser.user.profile_image);
-        
         setUser(makeUser);
     }
 
 
-    const { followersCount, followingsCount, isFollowing, loading } = useSelector(
-        (state) => state.follow
-    );
+   
+    // {finding user profile}
+    // useEffect(()=>{
+    //     if(user){
+    //         dispatch(fetchUserProfile(user.id));
+    //     }
+    // }, [user, dispatch]);
 
-    useEffect(()=>{
-        if(user){
-            dispatch(fetchUserProfile(user.id));
-        }
-    }, [user, dispatch]);
+    //fllow handeler make
+    // const handleFollow = () => {
+    //     if (user) {
+    //     dispatch(followToggle(user.id)).then(()=>{
+    //         dispatch(fetchUserProfile(user.id));
+    //     })
+    //   }
+    // }
+    const handleFollow = async () => {
+        await toggleFollow(user.id)
 
-    const handleFollow = () => {
-        if (user) {
-        dispatch(followToggle(user.id));
-  }
+        fetchUserByUsername(username).then((data) => {
+            setUser(data.user);
+            dispatch(setPosts(data.posts));
+            setFollowers(data.followers)
+        })
+        
     }
     return (
         <div className="flex">
@@ -104,7 +123,7 @@ export default function UserProfile() {
                         {user.username}
                     </p>
 
-                    {currentUserEmail === user.email ? (
+                    {currentUser.id === user.id ? (
                         <>
                         <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             Edit profile
@@ -127,8 +146,8 @@ export default function UserProfile() {
                 )}
                         <div className="flex items-center gap-5 mt-4">
                             <p>{posts.length} posts</p>
-                            <p>{followersCount} followers</p>
-                            <p>{followingsCount} following</p>
+                            <p>{followers.length} followers</p>
+                            <p>{following.length} following</p>
                         </div>
 
                         <div className="flex items-center gap-5 mt-5">
