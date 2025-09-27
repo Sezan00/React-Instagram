@@ -55,8 +55,6 @@ class FollowController extends Controller
 }
 
 
-
-
     public function followers($id){
         $user = User::with('follwers')->findOrFail($id);
         return response()->json($user->followers);

@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/photos', [PhotoController::class, 'index']);
     Route::post('/photos', [PhotoController::class, 'store']);
+    //data fetch with username slug
     Route::get('/profile/{username}', [ProfileController::class, 'show']);
 
 
@@ -32,5 +33,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/{id}/follow', [FollowController::class, 'toggle']);
     Route::get('/users/{id}/followers', [FollowController::class, 'followers']); // followers list
     Route::get('/users/{id}/followings', [FollowController::class, 'followings']);
-    Route::get('/user/{id}', [ProfileController::class, 'show']);
+    Route::get('/user/{id}', [ProfileController::class, 'show']); //where have logic about follow and following
 });
