@@ -14,18 +14,7 @@ export const followToggle = createAsyncThunk(
   }
 );
 
-// Fetch user profile (followers, followings, isFollowing)
-// export const fetchUserProfile = createAsyncThunk(
-//   "follow/fetchProfile",
-//   async (userId, { rejectWithValue }) => {
-//     try {
-//       const response = await getUserProfile(userId);
-//       return response.data; 
-//     } catch (err) {
-//       return rejectWithValue(err.response?.data || "Something went wrong");
-//     }
-//   }
-// );
+
 
 const followSlice = createSlice({
   name: "follow",
@@ -53,21 +42,6 @@ const followSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      // fetch profile counts
-      // .addCase(fetchUserProfile.pending, (state) => {
-      //   state.loading = true;
-      // })
-      // .addCase(fetchUserProfile.fulfilled, (state, action) => {
-      //   state.loading = false;
-      //   state.followersCount = action.payload.followers_count;
-      //   state.followingsCount = action.payload.followings_count;
-      //   state.isFollowing = action.payload.is_following;
-      // })
-      // .addCase(fetchUserProfile.rejected, (state, action) => {
-      //   state.loading = false;
-      //   state.error = action.payload;
-      // });
   },
 });
 

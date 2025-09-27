@@ -11,6 +11,7 @@ import { setPosts } from '../features/postSlice';
 import { fetchUserByUsername } from '../api/usernameApi/userAPi';
 import ModalCarousel from '../component/ModalCarousel';
 import { toggleFollow } from '../api/userFollowApi/userFollow';
+import  FollowersModal  from '../component/FollowersModal';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
@@ -28,16 +29,22 @@ export default function UserProfile() {
     const [isFollowing, setIsFollowing] = useState(false);
     const [loading, setLoadig] = useState(false)
     
-    
+    const [openFollowers, setOpenFollowers] = useState(false);
+    const [openFollowing, setOpenFollowing] = useState(false);
+
+    console.log('CurrentUser:', currentUser);
+    console.log("User Profile:", user);
     //  const { followersCount, followingsCount, isFollowing, loading } = useSelector(
     //     (state) => state.follow
     // );
     
 
     const dispatch = useDispatch();
-
+    //when user will change then it's show that user data post followers ETC
     useEffect(()=>{
         fetchUserByUsername(username).then((data) => {
+            
+            console.log("Api response:", data)
             setUser(data.user);
             dispatch(setPosts(data.posts));
             setFollowers(data.followers)
@@ -57,22 +64,6 @@ export default function UserProfile() {
     }
 
 
-   
-    // {finding user profile}
-    // useEffect(()=>{
-    //     if(user){
-    //         dispatch(fetchUserProfile(user.id));
-    //     }
-    // }, [user, dispatch]);
-
-    //fllow handeler make
-    // const handleFollow = () => {
-    //     if (user) {
-    //     dispatch(followToggle(user.id)).then(()=>{
-    //         dispatch(fetchUserProfile(user.id));
-    //     })
-    //   }
-    // }
     const handleFollow = async () => {
         await toggleFollow(user.id)
 
@@ -100,7 +91,7 @@ export default function UserProfile() {
                                 className="w-32 h-32 rounded-full object-cover border border-gray-300 shadow"
                                 alt=""
                                 onClick={() => {
-                                if (currentUserEmail === user.email) {
+                                if (currentUser?.email === user.email) {
                                     setOpen(true);
                                 }
                                 }}
@@ -108,8 +99,12 @@ export default function UserProfile() {
                             )}
 
                         {/* <p>{user?.profile_image ?? 'NO PROFILE IMAGE'}</p> */}
-                        { currentUserEmail === user?.email && (
-                            <UploadProfile open={open} updateProfile={updateProfile} user={{ user }} onClose={() => setOpen(false)} />
+                        { currentUser?.email === user?.email && (
+                            <UploadProfile 
+                            open={open} 
+                            updateProfile={updateProfile} 
+                            users={user} 
+                            onClose={() => setOpen(false)} />
                         )}
                         
                     </div>
@@ -146,9 +141,26 @@ export default function UserProfile() {
                 )}
                         <div className="flex items-center gap-5 mt-4">
                             <p>{posts.length} posts</p>
-                            <p>{followers.length} followers</p>
-                            <p>{following.length} following</p>
+                            <p onClick={()=> setOpenFollowers(true)} className='cursor-pointer'>
+                                {followers.length} followers</p>
+                            <p onClick={()=> setOpenFollowing(true)} className='cursor-pointer'>
+                                {following.length} following
+                            </p>
                         </div>
+                        <FollowersModal
+                            open={openFollowers}
+                            onClose={() => setOpenFollowers(false)}
+                            users={followers}    
+                            title="Followers"
+                            />
+
+                        <FollowersModal
+                            open={openFollowing}
+                            onClose={()=> setOpenFollowing(false)}
+                            users={following}
+                            title="Following"
+                        />
+
 
                         <div className="flex items-center gap-5 mt-5">
                             <p className="font-semibold">{user ? (user.full_name) : <span className='inline-block h-5 w-32 bg-gray-300 rounded animate-pulse'></span>}</p>

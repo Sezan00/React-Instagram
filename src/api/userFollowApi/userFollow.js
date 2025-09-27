@@ -1,3 +1,6 @@
+
+//__It's follow api call with slug (username)__//
+
 import axios from "axios";
 
 const API = axios.create({
