@@ -22,7 +22,7 @@ class FollowController extends Controller
 
     $targetUser = User::findOrFail($followingId); 
     $authUser   = Auth::user(); 
-
+         
     $already = DB::table('follows')
         ->where('follower_id', $followerId)
         ->where('following_id', $followingId)

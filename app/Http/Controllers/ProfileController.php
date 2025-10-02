@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
     public function show($username){
         $user = User::where('username', $username)->with('posts.photos', 'profileImage')->firstOrFail();
 
+        //for show Follow list
         $followers = DB::table('follows')
         ->join('users', 'follows.follower_id', '=', 'users.id')
         ->leftJoin('profile_images', 'users.id', '=', 'profile_images.user_id')
@@ -51,5 +53,17 @@ class ProfileController extends Controller
             'followers' => $followers,
             'following' => $following
         ]);
+    }
+
+
+    public function unfollow(Request $request, $userid){
+        $authId = Auth::id();
+
+        DB::table('follows')
+        ->where('follower_id', $authId)
+        ->where('following_id', $authId)
+        ->delete();
+
+        return response()->json(['message'=>'Unfollowed successfully']);
     }
 }
