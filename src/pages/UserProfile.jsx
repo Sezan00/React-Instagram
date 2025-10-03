@@ -32,21 +32,19 @@ export default function UserProfile() {
     const [openFollowers, setOpenFollowers] = useState(false);
     const [openFollowing, setOpenFollowing] = useState(false);
 
-    console.log('CurrentUser:', currentUser);
-    console.log("User Profile:", user);
     //  const { followersCount, followingsCount, isFollowing, loading } = useSelector(
     //     (state) => state.follow
     // );
-    
+    console.log(currentUser.username)
 
     const dispatch = useDispatch();
     //when user will change then it's show that user data post followers ETC
     useEffect(()=>{
         fetchUserByUsername(username).then((data) => {
             
-            console.log("Api response:", data)
             setUser(data.user);
             dispatch(setPosts(data.posts));
+            //when user will change 
             setFollowers(data.followers)
             setFollowing(data.following)
         })
@@ -54,9 +52,8 @@ export default function UserProfile() {
     },[username, dispatch]);
 
 
-    useEffect(() => {
-        setIsFollowing(followers.find(item => item.follower_id == currentUser.id) ?? false)
-        
+     useEffect(() => {
+        setIsFollowing(followers.find(item => item.id == currentUser.id) ?? false)        
     }, [user])
 
     const updateProfile = (makeUser) => {
@@ -70,6 +67,7 @@ export default function UserProfile() {
         fetchUserByUsername(username).then((data) => {
             setUser(data.user);
             dispatch(setPosts(data.posts));
+            //update after follow and unfollow
             setFollowers(data.followers)
         })
         

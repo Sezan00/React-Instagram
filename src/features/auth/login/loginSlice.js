@@ -14,7 +14,7 @@ const initialState = {
 export const login = createAsyncThunk(
   "auth/login",
   async (credentials) =>{
-    const response = await getLogin(credentials);
+    const response = await getLogin(credentials); //creadentials is Input email, password
     return response;
   }
 );

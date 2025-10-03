@@ -1,5 +1,5 @@
 import { Home, Search, Compass, Film, MessageCircle, Heart, PlusSquare, User, Menu, Boxes, Trash } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../features/auth/login/loginSlice";
 import { useState } from "react";
@@ -9,11 +9,20 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false); // Create modal control
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user } = useSelector((state) => state.login);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
+
+  const goToProfile = () =>{
+    if(user && user.username){
+      navigate(`/profile/${user.username}`);
+    } else{
+      console.log('User not logged')
+    }
+  } 
 
   return (
     <div className="w-64 h-screen border-r border-gray-300 flex flex-col p-5">
@@ -56,7 +65,7 @@ export default function Sidebar() {
           {/* 👉 Modal open হলে CreatePost দেখাও */}
           {open && <CreatePost onClose={() => setOpen(false)} />}
 
-          <button className="flex items-center gap-3 font-roboto mt-5 px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition">
+          <button onClick={goToProfile} className="flex items-center gap-3 font-roboto mt-5 px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition">
             <User/> Profile
           </button>
         </nav>
