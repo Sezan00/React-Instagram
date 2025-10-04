@@ -12,6 +12,7 @@ import { fetchUserByUsername } from '../api/usernameApi/userAPi';
 import ModalCarousel from '../component/ModalCarousel';
 import { toggleFollow } from '../api/userFollowApi/userFollow';
 import  FollowersModal  from '../component/FollowersModal';
+import { UserEdit } from '../component/UserEdit';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
@@ -118,9 +119,11 @@ export default function UserProfile() {
 
                     {currentUser.id === user.id ? (
                         <>
-                        <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                        <button onClick={()=>setOpen(true)} className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             Edit profile
                         </button>
+                        {open && <UserEdit onClose={()=> setOpen(false)} />}
+
                         <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             View archive
                         </button>

@@ -62,7 +62,7 @@ export default function Sidebar() {
             <PlusSquare/> Create
           </button>
 
-          {/* 👉 Modal open হলে CreatePost দেখাও */}
+          {/* 👉 Open Modal for create post */}
           {open && <CreatePost onClose={() => setOpen(false)} />}
 
           <button onClick={goToProfile} className="flex items-center gap-3 font-roboto mt-5 px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition">
