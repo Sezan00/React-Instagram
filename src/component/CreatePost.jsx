@@ -48,7 +48,7 @@ async function sharePost() {
 
   return(
    <>
-<div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+  <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
   <div className="w-full max-w-5xl shadow-lg rounded-3xl overflow-hidden relative bg-gray-100 max-h-[90vh]">
     
 

@@ -18,6 +18,9 @@ export default function UserProfile() {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState(null);
 
+    const [openUpload, setOpenUpload] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
+
     // const [posts, setPosts] = useState([]);
     const posts = useSelector((state) => state.posts.posts)
     const [selectedPost, setSelectedPost] = useState(null);
@@ -36,7 +39,7 @@ export default function UserProfile() {
     //  const { followersCount, followingsCount, isFollowing, loading } = useSelector(
     //     (state) => state.follow
     // );
-    console.log(currentUser.username)
+        
 
     const dispatch = useDispatch();
     //when user will change then it's show that user data post followers ETC
@@ -91,7 +94,7 @@ export default function UserProfile() {
                                 alt=""
                                 onClick={() => {
                                 if (currentUser?.email === user.email) {
-                                    setOpen(true);
+                                    setOpenUpload(true);
                                 }
                                 }}
                             />
@@ -100,7 +103,7 @@ export default function UserProfile() {
                         {/* <p>{user?.profile_image ?? 'NO PROFILE IMAGE'}</p> */}
                         { currentUser?.email === user?.email && (
                             <UploadProfile 
-                            open={open} 
+                            open={openUpload} 
                             updateProfile={updateProfile} 
                             users={user} 
                             onClose={() => setOpen(false)} />
@@ -119,10 +122,10 @@ export default function UserProfile() {
 
                     {currentUser.id === user.id ? (
                         <>
-                        <button onClick={()=>setOpen(true)} className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
+                        <button onClick={()=>setOpenEdit(true)} className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             Edit profile
                         </button>
-                        {open && <UserEdit onClose={()=> setOpen(false)} />}
+                        {openEdit  && <UserEdit user={user} onClose={()=> setOpenEdit(false)} onUpdate={updateProfile}/>}
 
                         <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             View archive
