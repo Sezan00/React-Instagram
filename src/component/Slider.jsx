@@ -5,24 +5,27 @@ import { logout } from "../features/auth/login/loginSlice";
 import { useState } from "react";
 import CreatePost from "./CreatePost";
 
-export default function Sidebar() {
+export default function Sidebar({username}) {
   const [open, setOpen] = useState(false); // Create modal control
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.login);
+  const localUser = localStorage.getItem("user")
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
-
+  console.log(username)
   const goToProfile = () =>{
-    if(user && user.username){
-      navigate(`/profile/${user.username}`);
+    const currentUsername = username || user?.username;
+    if(currentUsername){
+      navigate(`/profile/${currentUsername}`);
     } else{
-      console.log('User not logged')
+      console.log('User not logged');
     }
-  } 
+    
+  };
 
   return (
     <div className="w-64 h-screen border-r border-gray-300 flex flex-col p-5">
@@ -46,7 +49,9 @@ export default function Sidebar() {
             <Film/> Reels
           </button>
 
-          <button className="flex items-center gap-3 font-roboto mt-2 px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition">
+          <button
+           onClick={() => navigate("/message")}
+          className="flex items-center gap-3 font-roboto mt-2 px-3 py-2 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition">
             <MessageCircle/> Message
           </button>
 

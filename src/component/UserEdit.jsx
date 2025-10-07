@@ -3,26 +3,24 @@ import { updateUser } from '../api/userApi/userApi'
 import { useNavigate } from 'react-router-dom';
 
 export const UserEdit = ({user, onClose, onUpdate}) => {
-   const [username, setUsername] = useState(user?.username || "");
+  const [username, setUsername] = useState(user?.username || "");
   const [fullName, setFullName] = useState(user?.full_name || "");
   const [error, setError] = useState(null);
-
-  const handleSubmit = async (e) => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  
+const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-      const res = await updateUser(user.id, {
-        username,
-        full_name: fullName,
-      });
-      
-      if(res.user) {
-        onUpdate(res.user); //sending to parent state
+    try {
+        const res = await updateUser(user.id, { username, full_name: fullName }, token);
+        onUpdate(res.user);
+
+        navigate(`/profile/${res.user.username}`);
         onClose();
-      }
-    } catch (err){
-      setError("Username already exist or invalid input")
+    } catch (err) {
+        setError(err.message);
     }
-  };
+};
 
   return (
         <div className='fixed inset-0 flex items-center justify-center bg-black/50 z-50'> 

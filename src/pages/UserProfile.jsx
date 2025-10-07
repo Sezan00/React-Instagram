@@ -13,6 +13,8 @@ import ModalCarousel from '../component/ModalCarousel';
 import { toggleFollow } from '../api/userFollowApi/userFollow';
 import  FollowersModal  from '../component/FollowersModal';
 import { UserEdit } from '../component/UserEdit';
+import { updateUser } from '../api/userApi/userApi';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserProfile() {
     const [open, setOpen] = useState(false);
@@ -32,7 +34,10 @@ export default function UserProfile() {
     const [following, setFollowing] = useState([]);
     const [isFollowing, setIsFollowing] = useState(false);
     const [loading, setLoadig] = useState(false)
+    const navigate = useNavigate();
+
     
+
     const [openFollowers, setOpenFollowers] = useState(false);
     const [openFollowing, setOpenFollowing] = useState(false);
 
@@ -40,6 +45,11 @@ export default function UserProfile() {
     //     (state) => state.follow
     // );
         
+    const handleUserUpdate  = (updatedUser) => {
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        navigate(`/profile/${updatedUser.username}`);
+    };
 
     const dispatch = useDispatch();
     //when user will change then it's show that user data post followers ETC
@@ -78,7 +88,9 @@ export default function UserProfile() {
     }
     return (
         <div className="flex">
-            <Sidebar />
+            <Sidebar 
+                 key={currentUser?.id} username={currentUser.username} 
+            />
             <div className="ml-120 mt-14 flex-col justify-center">
                 <div className="flex">
 
@@ -106,7 +118,7 @@ export default function UserProfile() {
                             open={openUpload} 
                             updateProfile={updateProfile} 
                             users={user} 
-                            onClose={() => setOpen(false)} />
+                            onClose={() => setOpenUpload(false)} />
                         )}
                         
                     </div>
@@ -125,7 +137,13 @@ export default function UserProfile() {
                         <button onClick={()=>setOpenEdit(true)} className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             Edit profile
                         </button>
-                        {openEdit  && <UserEdit user={user} onClose={()=> setOpenEdit(false)} onUpdate={updateProfile}/>}
+                        {openEdit  &&
+
+                         <UserEdit 
+                         user={user} 
+                         onClose={()=> 
+                         setOpenEdit(false)} 
+                         onUpdate={handleUserUpdate}/>}
 
                         <button className="bg-gray-200 px-4 py-1 rounded text-sm font-medium">
                             View archive
