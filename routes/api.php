@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\ProfileImageController;
 use App\Http\Controllers\UserController;
@@ -25,9 +26,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/photos', [PhotoController::class, 'index']);
     Route::post('/photos', [PhotoController::class, 'store']);
     //data fetch with username slug
+
     Route::get('/profile/{username}', [ProfileController::class, 'show']);
-
-
+    Route::put('/users/{id}', [AuthController::class, 'updateUsername']); //username update route
     // follow unfollow section route 
 
     Route::post('/user/{id}/follow', [FollowController::class, 'toggle']);
@@ -36,4 +37,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/{id}', [ProfileController::class, 'show']); //where have logic about follow and following
 
     Route::delete('/user/{id}/unfollow', [ProfileController::class, 'unfollow']);
+
+
+    //message section 
+
+    Route::get('/chat-list', [ChatController::class, 'chatList']);
+    Route::get('/chat/{userId}', [ChatController::class, 'fetchMessage']);
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
 });

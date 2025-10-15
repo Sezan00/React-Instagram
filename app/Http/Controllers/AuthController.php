@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
     public function Register(Request $request) {
@@ -47,4 +50,30 @@ class AuthController extends Controller
     ]);
 
     }
+
+
+    public function updateUsername(Request $request, $id)
+{
+    $request->validate([
+        'full_name' => 'sometimes|string',
+        'username' => 'sometimes|required|string|min:3|max:20|unique:users,username,' . $id,
+    ]);
+
+    $user = User::findOrFail($id);
+
+    if ($request->filled('full_name')) {
+        $user->full_name = $request->full_name;
+    }
+
+    if ($request->filled('username')) {
+        $user->username = Str::slug($request->username);
+    }
+
+    $user->save();
+
+    return response()->json([
+        'message' => 'User updated successfully',
+        'user' => $user
+    ]);
+}
 }
